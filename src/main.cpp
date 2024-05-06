@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <iostream>
 #include <ctime>
 #include <vector>
 #include <raylib.h>
@@ -8,29 +9,12 @@
 
 static void UpdateDrawFrame(int matrix[][MAX_HEIGHT]);
 
-void InitMatrix(int matrix[][MAX_HEIGHT]){
+void ClearMatrix(int matrix[][MAX_HEIGHT]){
     //0 = dead, 1 = red, 2 = blue
     for (int i = 0; i < MAX_LENGTH; i++)
     {
         for (int j = 0; j < MAX_HEIGHT; j++){
-            if (i == 4 && j == 5){
-                matrix[i][j] = 1;
-            }
-            else if (i == 4 && j == 6){
-                matrix[i][j] = 1;
-            }
-            else if (i == 4 && j == 7){
-                matrix[i][j] = 1;
-            }
-            else if (i == 3 && j == 7){
-                matrix[i][j] = 1;
-            }
-            else if (i == 2 && j == 6){
-                matrix[i][j] = 1;
-            }
-            else{
-                matrix[i][j] = 0;
-            }
+            matrix[i][j] = 0;
         }
     }
 }
@@ -176,11 +160,11 @@ int main()
     const int screenWidth = 800;
     const int screenHeight = 600;
 
-    InitWindow(screenWidth, screenHeight, "raylib");
+    InitWindow(screenWidth, screenHeight, "game of life");
 
-    InitMatrix(matrix);
+    RandomMatrix(matrix);
 
-    SetTargetFPS(2);
+    SetTargetFPS(3);
     
     while (!WindowShouldClose())
     {
@@ -192,8 +176,18 @@ int main()
     return 0;
 }
 
+bool pause = false;
+
 static void UpdateDrawFrame(int matrix[][MAX_HEIGHT])
 {
+    std::vector<Rectangle> rectangles;
+    for (int i = 0; i < MAX_LENGTH; i++){
+        for (int j = 0; j < MAX_HEIGHT; j++){
+            Rectangle rect = {i*25, j*25, 25, 25};
+            rectangles.push_back(rect);
+        }        
+    }
+
     BeginDrawing();
 
         ClearBackground(BLACK);
@@ -213,13 +207,40 @@ static void UpdateDrawFrame(int matrix[][MAX_HEIGHT])
             }
         }
 
+        Rectangle pauseButton = {25, 555, 100, 40};
         DrawRectangle(25, 555, 100, 40, DARKGRAY);
+        DrawText("Pause", pauseButton.x + pauseButton.width / 2 - MeasureText("Pause", 20) / 2, pauseButton.y + pauseButton.height / 2 - 10 , 20, WHITE);
+        
+        Rectangle clearButton = {187, 555, 100, 40};
         DrawRectangle(187, 555, 100, 40, DARKGRAY);
+        DrawText("Clear", clearButton.x + clearButton.width / 2 - MeasureText("Clear", 20) / 2, clearButton.y + clearButton.height / 2 - 10 , 20, WHITE);
+        
         DrawRectangle(350, 555, 100, 40, DARKGRAY);
         DrawRectangle(512, 555, 100, 40, DARKGRAY);
         DrawRectangle(675, 555, 100, 40, DARKGRAY);
 
     EndDrawing();
 
-    nextMatrix(matrix);
+    if (!pause){
+        nextMatrix(matrix);
+    }
+
+    for (Rectangle r : rectangles){
+        if (CheckCollisionPointRec(GetMousePosition(), r) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+            std::cout << (r.x)/25 << ',' << (r.y)/25 << std::endl;
+            matrix[(int)((r.x)/25)][(int)((r.y)/25)] = 1;
+        }
+        else if (CheckCollisionPointRec(GetMousePosition(), r) && IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)){
+            std::cout << (r.x)/25 << ',' << (r.y)/25 << std::endl;
+            matrix[(int)((r.x)/25)][(int)((r.y)/25)] = 2;
+        }
+    }
+
+    if (CheckCollisionPointRec(GetMousePosition(), pauseButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+        pause = !pause;
+    }
+
+    if (CheckCollisionPointRec(GetMousePosition(), clearButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+        ClearMatrix(matrix);
+    }
 }
