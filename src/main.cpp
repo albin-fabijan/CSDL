@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <ctime>
+#include <vector>
 #include <raylib.h>
 
 #define MAX_HEIGHT 22
@@ -9,9 +10,9 @@ static void UpdateDrawFrame(int matrix[][MAX_HEIGHT]);
 
 void InitMatrix(int matrix[][MAX_HEIGHT]){
     //0 = dead, 1 = red, 2 = blue
-    for (int i = 0; i < 32; i++)
+    for (int i = 0; i < MAX_LENGTH; i++)
     {
-        for (int j = 0; j < 22; j++){
+        for (int j = 0; j < MAX_HEIGHT; j++){
             if (i == 4 && j == 5){
                 matrix[i][j] = 1;
             }
@@ -19,6 +20,12 @@ void InitMatrix(int matrix[][MAX_HEIGHT]){
                 matrix[i][j] = 1;
             }
             else if (i == 4 && j == 7){
+                matrix[i][j] = 1;
+            }
+            else if (i == 3 && j == 7){
+                matrix[i][j] = 1;
+            }
+            else if (i == 2 && j == 6){
                 matrix[i][j] = 1;
             }
             else{
@@ -30,314 +37,134 @@ void InitMatrix(int matrix[][MAX_HEIGHT]){
 
 void RandomMatrix(int matrix[][MAX_HEIGHT]){
     //0 = dead, 1 = red, 2 = blue
-    for (int i = 0; i < 32; i++)
+    for (int i = 0; i < MAX_LENGTH; i++)
     {
-        for (int j = 0; j < 22; j++){
+        for (int j = 0; j < MAX_HEIGHT; j++){
             int randomNum = std::rand() / ((RAND_MAX + 1u) / 3);
             matrix[i][j] = randomNum;
         }
     }
 }
 
-int getNeighbors(int matrix[][MAX_HEIGHT], int i, int j){
-    int reds = 0;
-    int blues = 0;
+std::vector<int> getNeighbors(int matrix[][MAX_HEIGHT], int i, int j){
+    std::vector<int> result;
     if (i == 0 && j == 0){ // ┏
-        //1
-        if (matrix[i][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i][j+1] == 2){
-            blues++;
-        }
-        //2
-        if (matrix[i+1][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j+1] == 2){
-            blues++;
-        }
-        //3
-        if (matrix[i+1][j] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j] == 2){
-            blues++;
-        }
+        result.push_back(matrix[i][j+1]);
+        result.push_back(matrix[i+1][j+1]);
+        result.push_back(matrix[i+1][j]);        
     }
-    else if (i == 0 && j == MAX_HEIGHT){ // ┓
-        //1
-        if (matrix[i][j-1] == 1){
-            reds++;
-        }
-        else if (matrix[i][j-1] == 2){
-            blues++;
-        }
-        //2
-        if (matrix[i+1][j-1] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j-1] == 2){
-            blues++;
-        }
-        //3
-        if (matrix[i+1][j] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j] == 2){
-            blues++;
-        }
+    else if (i == 0 && j == MAX_HEIGHT-1){ // ┓
+        result.push_back(matrix[i][j-1]);
+        result.push_back(matrix[i+1][j-1]);
+        result.push_back(matrix[i+1][j]);
     }
     else if (i == 0){ //﹉
-        //1
-        if (matrix[i][j-1] == 1){
-            reds++;
-        }
-        else if (matrix[i][j-1] == 2){
-            blues++;
-        }
-        //2
-        if (matrix[i+1][j-1] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j-1] == 2){
-            blues++;
-        }
-        //3
-        if (matrix[i+1][j] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j] == 2){
-            blues++;
-        }
-        //4
-        if (matrix[i][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i][j+1] == 2){
-            blues++;
-        }
-        //5
-        if (matrix[i+1][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j+1] == 2){
-            blues++;
-        }
+        result.push_back(matrix[i][j-1]);
+        result.push_back(matrix[i+1][j-1]);
+        result.push_back(matrix[i+1][j]);
+        result.push_back(matrix[i][j+1]);
+        result.push_back(matrix[i+1][j+1]);
     }
-    else if (i == MAX_LENGTH && j == 0){ // ┗
-        //1
-        if (matrix[i-1][j] == 1){
-            reds++;
-        }
-        else if (matrix[i-1][j] == 2){
-            blues++;
-        }
-        //2
-        if (matrix[i][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i][j+1] == 2){
-            blues++;
-        }
-        //3
-        if (matrix[i+1][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j+1] == 2){
-            blues++;
-        }
+    else if (i == MAX_LENGTH-1 && j == 0){ // ┗
+        result.push_back(matrix[i-1][j]);
+        result.push_back(matrix[i][j+1]);
+        result.push_back(matrix[i-1][j+1]);
     }
-    else if (i == MAX_LENGTH && j == MAX_HEIGHT){ // ┛
-        //1
-        if (matrix[i-1][j-1] == 1){
-            reds++;
-        }
-        else if (matrix[i-1][j-1] == 2){
-            blues++;
-        }
-        //2
-        if (matrix[i][j-1] == 1){
-            reds++;
-        }
-        else if (matrix[i][j-1] == 2){
-            blues++;
-        }
-        //3
-        if (matrix[i-1][j] == 1){
-            reds++;
-        }
-        else if (matrix[i-1][j] == 2){
-            blues++;
-        }
+    else if (i == MAX_LENGTH-1 && j == MAX_HEIGHT-1){ // ┛
+        result.push_back(matrix[i-1][j-1]);
+        result.push_back(matrix[i][j-1]);
+        result.push_back(matrix[i-1][j]);
     }
-    else if (i == MAX_LENGTH){ //_
-        //1
-        if (matrix[i-1][j-1] == 1){
-            reds++;
-        }
-        else if (matrix[i-1][j-1] == 2){
-            blues++;
-        }
-        //2
-        if (matrix[i][j-1] == 1){
-            reds++;
-        }
-        else if (matrix[i][j-1] == 2){
-            blues++;
-        }
-        //3
-        if (matrix[i-1][j] == 1){
-            reds++;
-        }
-        else if (matrix[i-1][j] == 2){
-            blues++;
-        }
-        //4
-        if (matrix[i-1][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i-1][j+1] == 2){
-            blues++;
-        }
-        //5
-        if (matrix[i][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i][j+1] == 2){
-            blues++;
-        }
+    else if (i == MAX_LENGTH-1){ //_
+        result.push_back(matrix[i-1][j-1]);
+        result.push_back(matrix[i][j-1]);
+        result.push_back(matrix[i-1][j]);
+        result.push_back(matrix[i-1][j+1]);
+        result.push_back(matrix[i][j+1]);
     }
     else if (j == 0){// |<-
-        //1
-        if (matrix[i-1][j] == 1){
-            reds++;
-        }
-        else if (matrix[i-1][j] == 2){
-            blues++;
-        }
-        //2
-        if (matrix[i+1][j] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j] == 2){
-            blues++;
-        }
-        //3
-        if (matrix[i-1][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i-1][j+1] == 2){
-            blues++;
-        }
-        //4
-        if (matrix[i][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i][j+1] == 2){
-            blues++;
-        }
-        //5
-        if (matrix[i+1][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j+1] == 2){
-            blues++;
-        }
+        result.push_back(matrix[i-1][j]);
+        result.push_back(matrix[i+1][j]);
+        result.push_back(matrix[i-1][j+1]);
+        result.push_back(matrix[i][j+1]);
+        result.push_back(matrix[i+1][j+1]);
     }
-    else if (j == MAX_HEIGHT){// ->|
-        //1
-        if (matrix[i-1][j-1] == 1){
-            reds++;
-        }
-        else if (matrix[i-1][j-1] == 2){
-            blues++;
-        }
-        //2
-        if (matrix[i][j-1] == 1){
-            reds++;
-        }
-        else if (matrix[i][j-1] == 2){
-            blues++;
-        }
-        //3
-        if (matrix[i+1][j-1] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j-1] == 2){
-            blues++;
-        }
-        //4
-        if (matrix[i-1][j] == 1){
-            reds++;
-        }
-        else if (matrix[i-1][j] == 2){
-            blues++;
-        }
-        //5
-        if (matrix[i+1][j] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j] == 2){
-            blues++;
-        }
+    else if (j == MAX_HEIGHT-1){// ->|
+        result.push_back(matrix[i-1][j-1]);
+        result.push_back(matrix[i][j-1]);
+        result.push_back(matrix[i+1][j-1]);
+        result.push_back(matrix[i-1][j]);
+        result.push_back(matrix[i+1][j]);
     }
     else{
-        //1
-        if (matrix[i-1][j-1] == 1){
-            reds++;
+        result.push_back(matrix[i-1][j-1]);
+        result.push_back(matrix[i][j-1]);
+        result.push_back(matrix[i+1][j-1]);
+        result.push_back(matrix[i-1][j]);
+        result.push_back(matrix[i+1][j]);
+        result.push_back(matrix[i-1][j+1]);
+        result.push_back(matrix[i][j+1]);
+        result.push_back(matrix[i+1][j+1]);
+    }
+    result.push_back(0);
+    return result;
+}
+
+int getNextState(int matrix[][MAX_HEIGHT], int i, int j){
+    int reds = 0;
+    int blues = 0;
+    std::vector<int> neighbors = getNeighbors(matrix, i, j);
+    if (matrix[i][j] == 0){
+        for (int i = 0; i < neighbors.size(); i++){
+            if (neighbors[i] == 1){
+                reds++;
+            }
+            else if (neighbors[i] == 2){
+                blues++;
+            }
         }
-        else if (matrix[i-1][j-1] == 2){
-            blues++;
+        if (reds+blues == 3){
+            if (reds > blues){
+                return 1;
+            }
+            return 2;
         }
-        //2
-        if (matrix[i][j-1] == 1){
-            reds++;
+        return 0;
+    }
+    else{
+        for (int i = 0; i < neighbors.size(); i++){
+            if (neighbors[i] == 1){
+                reds++;
+            }
+            else if (neighbors[i] == 2){
+                blues++;
+            }
         }
-        else if (matrix[i][j-1] == 2){
-            blues++;
+        if (reds+blues == 2 || reds+blues == 3){
+            if (reds > blues){
+                return 1;
+            }
+            else if (blues == reds){
+                return matrix[i][j];
+            }
+            return 2;
         }
-        //3
-        if (matrix[i+1][j-1] == 1){
-            reds++;
+        return 0;
+    }
+}
+
+void nextMatrix(int matrix[][MAX_HEIGHT]){
+    int newMatrix[MAX_LENGTH][MAX_HEIGHT];
+    for (int i = 0; i < MAX_LENGTH; i++)
+    {
+        for (int j = 0; j < MAX_HEIGHT; j++){
+            newMatrix[i][j] = getNextState(matrix, i, j);
         }
-        else if (matrix[i+1][j-1] == 2){
-            blues++;
-        }
-        //4
-        if (matrix[i-1][j] == 1){
-            reds++;
-        }
-        else if (matrix[i-1][j] == 2){
-            blues++;
-        }
-        //5
-        if (matrix[i+1][j] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j] == 2){
-            blues++;
-        }
-        //6
-        if (matrix[i-1][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i-1][j+1] == 2){
-            blues++;
-        }
-        //7
-        if (matrix[i][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i][j+1] == 2){
-            blues++;
-        }
-        //8
-        if (matrix[i+1][j+1] == 1){
-            reds++;
-        }
-        else if (matrix[i+1][j+1] == 2){
-            blues++;
+    }
+    for (int i = 0; i < MAX_LENGTH; i++)
+    {
+        for (int j = 0; j < MAX_HEIGHT; j++){
+            matrix[i][j] = newMatrix[i][j];
         }
     }
 }
@@ -350,6 +177,8 @@ int main()
     const int screenHeight = 600;
 
     InitWindow(screenWidth, screenHeight, "raylib");
+
+    InitMatrix(matrix);
 
     SetTargetFPS(2);
     
@@ -365,8 +194,6 @@ int main()
 
 static void UpdateDrawFrame(int matrix[][MAX_HEIGHT])
 {
-    InitMatrix(matrix);
-
     BeginDrawing();
 
         ClearBackground(BLACK);
@@ -393,4 +220,6 @@ static void UpdateDrawFrame(int matrix[][MAX_HEIGHT])
         DrawRectangle(675, 555, 100, 40, DARKGRAY);
 
     EndDrawing();
+
+    nextMatrix(matrix);
 }
