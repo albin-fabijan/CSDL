@@ -211,14 +211,22 @@ static void UpdateDrawFrame(int matrix[][MAX_HEIGHT])
         DrawRectangle(25, 555, 100, 40, DARKGRAY);
         DrawText("Pause", pauseButton.x + pauseButton.width / 2 - MeasureText("Pause", 20) / 2, pauseButton.y + pauseButton.height / 2 - 10 , 20, WHITE);
         
-        Rectangle clearButton = {187, 555, 100, 40};
+        Rectangle nextButton = {187, 555, 100, 40};
         DrawRectangle(187, 555, 100, 40, DARKGRAY);
+        DrawText("Next", nextButton.x + nextButton.width / 2 - MeasureText("Next", 20) / 2, nextButton.y + nextButton.height / 2 - 10 , 20, WHITE);
+        
+        Rectangle clearButton = {350, 555, 100, 40};
+        DrawRectangle(350, 555, 100, 40, DARKGRAY);
         DrawText("Clear", clearButton.x + clearButton.width / 2 - MeasureText("Clear", 20) / 2, clearButton.y + clearButton.height / 2 - 10 , 20, WHITE);
         
-        DrawRectangle(350, 555, 100, 40, DARKGRAY);
+        Rectangle randomButton = {512, 555, 100, 40};
         DrawRectangle(512, 555, 100, 40, DARKGRAY);
+        DrawText("Random", randomButton.x + randomButton.width / 2 - MeasureText("Random", 20) / 2, randomButton.y + randomButton.height / 2 - 10 , 20, WHITE);
+        
+        Rectangle quitButton = {675, 555, 100, 40};
         DrawRectangle(675, 555, 100, 40, DARKGRAY);
-
+        DrawText("Quit", quitButton.x + quitButton.width / 2 - MeasureText("Quit", 20) / 2, quitButton.y + quitButton.height / 2 - 10 , 20, WHITE);
+        
     EndDrawing();
 
     if (!pause){
@@ -240,7 +248,19 @@ static void UpdateDrawFrame(int matrix[][MAX_HEIGHT])
         pause = !pause;
     }
 
+    if (CheckCollisionPointRec(GetMousePosition(), nextButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+        nextMatrix(matrix);
+    }
+
     if (CheckCollisionPointRec(GetMousePosition(), clearButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
         ClearMatrix(matrix);
+    }
+
+    if (CheckCollisionPointRec(GetMousePosition(), randomButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+        RandomMatrix(matrix);
+    }
+
+    if (CheckCollisionPointRec(GetMousePosition(), quitButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+        CloseWindow();
     }
 }
