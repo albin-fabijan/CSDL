@@ -201,9 +201,9 @@ static void UpdateDrawFrame(int matrix[][MAX_HEIGHT])
         DrawRectangle(350, 555, 100, 40, DARKGRAY);
         DrawText("Clear", clearButton.x + clearButton.width / 2 - MeasureText("Clear", 20) / 2, clearButton.y + clearButton.height / 2 - 10 , 20, WHITE);
         
-        Rectangle randomButton = {512, 555, 100, 40};
+        Rectangle saveButton = {512, 555, 100, 40};
         DrawRectangle(512, 555, 100, 40, DARKGRAY);
-        DrawText("Random", randomButton.x + randomButton.width / 2 - MeasureText("Random", 20) / 2, randomButton.y + randomButton.height / 2 - 10 , 20, WHITE);
+        DrawText("save", saveButton.x + saveButton.width / 2 - MeasureText("save", 20) / 2, saveButton.y + saveButton.height / 2 - 10 , 20, WHITE);
         
         Rectangle quitButton = {675, 555, 100, 40};
         DrawRectangle(675, 555, 100, 40, DARKGRAY);
@@ -238,8 +238,8 @@ static void UpdateDrawFrame(int matrix[][MAX_HEIGHT])
         ClearMatrix(matrix);
     }
 
-    if (CheckCollisionPointRec(GetMousePosition(), randomButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
-        RandomMatrix(matrix);
+    if (CheckCollisionPointRec(GetMousePosition(), saveButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+        SaveMatrixToFile(matrix);
     }
 
     if (CheckCollisionPointRec(GetMousePosition(), quitButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){

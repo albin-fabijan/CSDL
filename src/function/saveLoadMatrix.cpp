@@ -4,7 +4,7 @@
 
 void SaveMatrixToFile(int matrix[32][22])
 {
-    std::ofstream outFile("matrix.txt");
+    std::ofstream outFile("data/matrix.txt");
 
     if (outFile.is_open())
     {
