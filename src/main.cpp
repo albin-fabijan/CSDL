@@ -2,7 +2,8 @@
 #include <ctime>
 #include <raylib.h>
 
-#include "anexe/menu.cpp"
+#include "function/menu.cpp"
+#include "function/mainGame.cpp"
 
 int main(){
     
@@ -16,9 +17,16 @@ int main(){
 #else
     SetTargetFPS(60);
     
-    while (!WindowShouldClose())
-    {
-        evenListeners();
+    while (!WindowShouldClose()){
+        if (generation == " "){
+            evenListeners();
+        }
+        else if (!gameLaunch){
+            LaunchGame(generation);
+        }
+        else{
+            UpdateDrawFrame(matrix);
+        }
     }
 #endif
 

@@ -1,9 +1,13 @@
 #include <raylib.h>
 #include <iostream>
+#include <string>
+
 using namespace std;
+
 Rectangle button1Rec = { 300 , 200, 200, 50 };
 Rectangle button2Rec = { 300 , 300, 200, 50 };
 Rectangle button3Rec = { 300 , 400, 200, 50 };
+string generation = " ";
 
 void drawMenu(){
     BeginDrawing();
@@ -25,7 +29,7 @@ void drawMenu(){
 
 void evenListeners(){
     if (CheckCollisionPointRec(GetMousePosition(), button1Rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
-        cout << "generation aleatoire" << endl;
+        generation = "random";
     }
     if (CheckCollisionPointRec(GetMousePosition(), button2Rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
         cout << "generation par defaut" << endl;
