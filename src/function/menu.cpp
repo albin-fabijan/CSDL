@@ -32,10 +32,10 @@ void evenListeners(){
         generation = "random";
     }
     if (CheckCollisionPointRec(GetMousePosition(), button2Rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
-        cout << "generation par defaut" << endl;
+        generation = "default";
     }
     if (CheckCollisionPointRec(GetMousePosition(), button3Rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
-        cout << "chargement d'une generation" << endl;
+        generation = "load";
     }
     drawMenu();
 }

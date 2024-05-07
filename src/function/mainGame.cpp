@@ -5,6 +5,8 @@
 #include <string>
 #include <raylib.h>
 
+#include "saveLoadMatrix.cpp"
+
 #define MAX_HEIGHT 22
 #define MAX_LENGTH 32
 bool gameLaunch = false;
@@ -156,7 +158,7 @@ void nextMatrix(int matrix[][MAX_HEIGHT]){
     }
 }
 
-bool pause = false;
+bool pause = true;
 
 static void UpdateDrawFrame(int matrix[][MAX_HEIGHT])
 {
@@ -251,6 +253,12 @@ void LaunchGame(std::string type){
 
     if (type == "random"){
         RandomMatrix(matrix);
+    }
+    else if (type == "load"){
+        LoadMatrixFromFile(matrix);
+    }
+    else if (type == "default"){
+        LoadMatrixFromFile(matrix,"defaultMatrix.txt");
     }
     SetTargetFPS(4);
     UpdateDrawFrame(matrix);
