@@ -203,7 +203,7 @@ static void UpdateDrawFrame(int matrix[][MAX_HEIGHT])
         
         Rectangle saveButton = {512, 555, 100, 40};
         DrawRectangle(512, 555, 100, 40, DARKGRAY);
-        DrawText("save", saveButton.x + saveButton.width / 2 - MeasureText("save", 20) / 2, saveButton.y + saveButton.height / 2 - 10 , 20, WHITE);
+        DrawText("Save", saveButton.x + saveButton.width / 2 - MeasureText("save", 20) / 2, saveButton.y + saveButton.height / 2 - 10 , 20, WHITE);
         
         Rectangle quitButton = {675, 555, 100, 40};
         DrawRectangle(675, 555, 100, 40, DARKGRAY);
